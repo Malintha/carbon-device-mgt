@@ -20,7 +20,6 @@ package org.wso2.carbon.device.mgt.jaxrs.beans;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
-import org.wso2.carbon.device.mgt.common.Device;
 
 import java.util.ArrayList;
 import java.util.List;

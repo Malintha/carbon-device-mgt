@@ -48,10 +48,7 @@ import org.wso2.carbon.device.mgt.core.operation.mgt.OperationManagerImpl;
 import org.wso2.carbon.device.mgt.core.operation.mgt.dao.OperationManagementDAOFactory;
 import org.wso2.carbon.device.mgt.core.permission.mgt.PermissionManagerServiceImpl;
 import org.wso2.carbon.device.mgt.core.push.notification.mgt.PushNotificationProviderRepository;
-import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
-import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderServiceImpl;
-import org.wso2.carbon.device.mgt.core.service.GroupManagementProviderService;
-import org.wso2.carbon.device.mgt.core.service.GroupManagementProviderServiceImpl;
+import org.wso2.carbon.device.mgt.core.service.*;
 import org.wso2.carbon.device.mgt.core.task.DeviceTaskManagerService;
 import org.wso2.carbon.device.mgt.core.util.DeviceManagementSchemaInitializer;
 import org.wso2.carbon.email.sender.core.service.EmailSenderService;
@@ -203,6 +200,10 @@ public class DeviceManagementServiceComponent {
         DeviceManagementProviderService deviceManagementProvider = new DeviceManagementProviderServiceImpl();
         DeviceManagementDataHolder.getInstance().setDeviceManagementProvider(deviceManagementProvider);
         bundleContext.registerService(DeviceManagementProviderService.class.getName(), deviceManagementProvider, null);
+
+        IOTDeviceManagementCoreService iotDeviceManagementCoreService = new IOTDeviceManagementCoreServiceImpl();
+        DeviceManagementDataHolder.getInstance().setIotDeviceManagementCoreService(iotDeviceManagementCoreService);
+        bundleContext.registerService(IOTDeviceManagementCoreService.class.getName(), iotDeviceManagementCoreService, null);
 
         /* Registering Group Management Service */
         GroupManagementProviderService groupManagementProvider = new GroupManagementProviderServiceImpl();

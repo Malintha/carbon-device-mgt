@@ -20,6 +20,8 @@ package org.wso2.carbon.device.mgt.core.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.Serializable;
 
@@ -32,6 +34,8 @@ public class DeviceType implements Serializable {
     private int id;
     @ApiModelProperty(name = "name", value = "Device type name", required = true)
     private String name;
+
+    private String config;
 
     public DeviceType() {
     }
@@ -54,6 +58,21 @@ public class DeviceType implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getConfig() {
+        return config;
+    }
+
+    public void setConfig(String config) {
+        this.config = config;
+    }
+
+    public String serializeToJSONString() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", id);
+        jsonObject.put("name", name);
+        return jsonObject.toString();
     }
 
 }

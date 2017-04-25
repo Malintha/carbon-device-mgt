@@ -67,7 +67,7 @@ public class DeviceTypeDAOImpl implements DeviceTypeDAO {
 		try {
 			conn = this.getConnection();
 			String sql =
-					"SELECT ID AS DEVICE_TYPE_ID, NAME AS DEVICE_TYPE FROM DM_DEVICE_TYPE where PROVIDER_TENANT_ID =" +
+					"SELECT ID AS DEVICE_TYPE_ID, NAME AS DEVICE_TYPE, CONFIG FROM DM_DEVICE_TYPE where PROVIDER_TENANT_ID =" +
 							"? OR SHARED_WITH_ALL_TENANTS = ?";
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, tenantId);
@@ -78,6 +78,7 @@ public class DeviceTypeDAOImpl implements DeviceTypeDAO {
 				DeviceType deviceType = new DeviceType();
 				deviceType.setId(rs.getInt("DEVICE_TYPE_ID"));
 				deviceType.setName(rs.getString("DEVICE_TYPE"));
+				deviceType.setConfig(rs.getString("CONFIG"));
 				deviceTypes.add(deviceType);
 			}
 			return deviceTypes;
@@ -203,5 +204,4 @@ public class DeviceTypeDAOImpl implements DeviceTypeDAO {
 	private Connection getConnection() throws SQLException {
 		return DeviceManagementDAOFactory.getConnection();
 	}
-
 }

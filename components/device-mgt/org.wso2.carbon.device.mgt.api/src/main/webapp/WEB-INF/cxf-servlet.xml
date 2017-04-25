@@ -26,6 +26,7 @@
     <jaxrs:server id="services" address="/">
         <jaxrs:serviceBeans>
             <ref bean="deviceManagementService"/>
+            <ref bean="iotDeviceManagementService"/>
             <ref bean="deviceManagementAdminService"/>
 			<ref bean="deviceAccessAuthorizationAdminService"/>
             <ref bean="deviceTypeManagementService"/>
@@ -69,6 +70,7 @@
     </bean>
 
     <bean id="deviceManagementService" class="org.wso2.carbon.device.mgt.jaxrs.service.impl.DeviceManagementServiceImpl"/>
+    <bean id="iotDeviceManagementService" class="org.wso2.carbon.device.mgt.jaxrs.service.impl.IoTDeviceManagementServiceImpl"/>
     <bean id="deviceTypeManagementService" class="org.wso2.carbon.device.mgt.jaxrs.service.impl.ConfigurationServiceImpl"/>
     <bean id="activityProviderService" class="org.wso2.carbon.device.mgt.jaxrs.service.impl.ActivityProviderServiceImpl"/>
     <bean id="notificationManagementService" class="org.wso2.carbon.device.mgt.jaxrs.service.impl.NotificationManagementServiceImpl"/>

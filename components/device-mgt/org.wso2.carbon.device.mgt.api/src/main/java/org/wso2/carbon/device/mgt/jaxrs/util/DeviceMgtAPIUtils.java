@@ -34,6 +34,7 @@ import org.wso2.carbon.device.mgt.core.device.details.mgt.DeviceInformationManag
 import org.wso2.carbon.device.mgt.core.search.mgt.SearchManagerService;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.device.mgt.core.service.GroupManagementProviderService;
+import org.wso2.carbon.device.mgt.core.service.IOTDeviceManagementCoreService;
 import org.wso2.carbon.device.mgt.jaxrs.beans.ErrorResponse;
 import org.wso2.carbon.device.mgt.jaxrs.service.impl.util.InputValidationException;
 import org.wso2.carbon.identity.jwt.client.extension.service.JWTClientManagerService;
@@ -46,11 +47,7 @@ import org.wso2.carbon.policy.mgt.common.PolicyMonitoringTaskException;
 import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
 import org.wso2.carbon.policy.mgt.core.task.TaskScheduleService;
 import org.wso2.carbon.registry.core.service.RegistryService;
-import org.wso2.carbon.user.api.AuthorizationManager;
-import org.wso2.carbon.user.api.RealmConfiguration;
-import org.wso2.carbon.user.api.UserRealm;
-import org.wso2.carbon.user.api.UserStoreException;
-import org.wso2.carbon.user.api.UserStoreManager;
+import org.wso2.carbon.user.api.*;
 import org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager;
 import org.wso2.carbon.user.core.service.RealmService;
 
@@ -111,6 +108,18 @@ public class DeviceMgtAPIUtils {
             throw new IllegalStateException(msg);
         }
         return deviceManagementProviderService;
+    }
+
+    public static IOTDeviceManagementCoreService getIOTDeviceManagementCoreService() {
+        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+        IOTDeviceManagementCoreService iotDeviceManagementCoreService =
+                (IOTDeviceManagementCoreService) ctx.getOSGiService(IOTDeviceManagementCoreService.class, null);
+        if (iotDeviceManagementCoreService == null) {
+            String msg = "IOT device management core service has not been initialized.";
+            log.error(msg);
+            throw new IllegalStateException(msg);
+        }
+        return iotDeviceManagementCoreService;
     }
 
     public static UserStoreCountRetriever getUserStoreCountRetrieverService()

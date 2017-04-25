@@ -28,6 +28,7 @@ import org.wso2.carbon.device.mgt.core.config.license.LicenseConfig;
 import org.wso2.carbon.device.mgt.core.push.notification.mgt.PushNotificationProviderRepository;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.device.mgt.core.service.GroupManagementProviderService;
+import org.wso2.carbon.device.mgt.core.service.IOTDeviceManagementCoreService;
 import org.wso2.carbon.device.mgt.core.task.DeviceTaskManagerService;
 import org.wso2.carbon.email.sender.core.service.EmailSenderService;
 import org.wso2.carbon.ntask.core.service.TaskService;
@@ -45,6 +46,7 @@ public class DeviceManagementDataHolder {
     private RealmService realmService;
     private TenantManager tenantManager;
     private DeviceManagementProviderService deviceManagerProvider;
+    private IOTDeviceManagementCoreService iotDeviceManagementCoreService;
     private LicenseManager licenseManager;
     private RegistryService registryService;
     private LicenseConfig licenseConfig;
@@ -101,6 +103,14 @@ public class DeviceManagementDataHolder {
 
     public void setDeviceManagementProvider(DeviceManagementProviderService deviceManagerProvider) {
         this.deviceManagerProvider = deviceManagerProvider;
+    }
+
+    public IOTDeviceManagementCoreService getIotDeviceManagementCoreService() {
+        return iotDeviceManagementCoreService;
+    }
+
+    public void setIotDeviceManagementCoreService(IOTDeviceManagementCoreService iotDeviceManagementCoreService) {
+        this.iotDeviceManagementCoreService = iotDeviceManagementCoreService;
     }
 
     public GroupManagementProviderService getGroupManagementProviderService() {

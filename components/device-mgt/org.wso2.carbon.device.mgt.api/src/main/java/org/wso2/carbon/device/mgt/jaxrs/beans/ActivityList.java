@@ -23,7 +23,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Activity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @ApiModel(value = "List of activities", description = "This contains a set of activities that matches a given"
