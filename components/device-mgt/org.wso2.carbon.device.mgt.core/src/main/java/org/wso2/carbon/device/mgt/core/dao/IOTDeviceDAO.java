@@ -17,6 +17,7 @@ package org.wso2.carbon.device.mgt.core.dao;
 
 import org.wso2.carbon.device.mgt.common.iot.IOTDevice;
 import org.wso2.carbon.device.mgt.common.iot.IOTDeviceType;
+import org.wso2.carbon.device.mgt.common.iot.IOTOperation;
 
 import java.util.List;
 
@@ -38,4 +39,10 @@ public interface IOTDeviceDAO {
     IOTDevice getIoTDevice(String deviceIdentifier, int tenantId) throws DeviceManagementDAOException;
 
     void populateProperties(IOTDevice device) throws DeviceManagementDAOException;
+
+    IOTOperation addOperation(IOTOperation operation, int tenantId) throws DeviceManagementDAOException;
+
+    void addDeviceOperationMapping(IOTOperation operation, int tenantId) throws DeviceManagementDAOException;
+
+    List<IOTOperation> getOperations(String deviceIdentifier, int tenantId) throws DeviceManagementDAOException;
 }

@@ -25,11 +25,13 @@ import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.iot.IOTDevice;
 import org.wso2.carbon.device.mgt.common.iot.IOTDeviceType;
+import org.wso2.carbon.device.mgt.common.iot.IOTOperation;
 import org.wso2.carbon.device.mgt.core.service.IOTDeviceManagementCoreService;
 import org.wso2.carbon.device.mgt.jaxrs.beans.DeviceTypeList;
 import org.wso2.carbon.device.mgt.jaxrs.beans.ErrorResponse;
 import org.wso2.carbon.device.mgt.jaxrs.beans.iot.IOTDeviceCredentials;
 import org.wso2.carbon.device.mgt.jaxrs.beans.iot.IOTDeviceList;
+import org.wso2.carbon.device.mgt.jaxrs.beans.iot.IOTOperationsList;
 import org.wso2.carbon.device.mgt.jaxrs.service.api.IoTDeviceManagementService;
 import org.wso2.carbon.device.mgt.jaxrs.util.APIMgtUtils;
 import org.wso2.carbon.device.mgt.jaxrs.util.DeviceMgtAPIUtils;
@@ -147,8 +149,40 @@ public class IoTDeviceManagementServiceImpl implements IoTDeviceManagementServic
         }
     }
 
-    public Response addOperation() {
-        return null;
+    @POST
+    @Path("/devices/{device-identifier}/{operation}")
+    @Override
+    public Response addOperation(@PathParam("device-identifier") String deviceIdentifier, @PathParam("operation") String operationName, @ApiParam(name = "payload", value = "Operation payload.", required = true) @Valid String payload) {
+        try {
+            IOTOperation operation = new IOTOperation();
+            operation.setDeviceIdentifier(deviceIdentifier);
+            operation.setOperationName(operationName);
+            operation.setPayload(payload);
+            IOTDeviceManagementCoreService dms = DeviceMgtAPIUtils.getIOTDeviceManagementCoreService();
+            dms.addOperation(operation);
+        } catch (DeviceManagementException e) {
+            String msg = "Failed to add operation " + operationName + " to device " + deviceIdentifier;
+            log.error(msg, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
+        }
+        return Response.status(Response.Status.OK).entity("Device type added.").build();
+    }
+
+    @GET
+    @Path("/devices/{device-identifier}/operations")
+    @Override
+    public Response getOperations(@PathParam("device-identifier") String deviceIdentifier) {
+        try {
+            IOTDeviceManagementCoreService dms = DeviceMgtAPIUtils.getIOTDeviceManagementCoreService();
+            List<IOTOperation> operations = dms.getOperations(deviceIdentifier);
+            IOTOperationsList operationsList = new IOTOperationsList();
+            operationsList.setOperations(operations);
+            return Response.status(Response.Status.OK).entity(operationsList).build();
+        } catch (DeviceManagementException e) {
+            String msg = "Failed to get operations of the device " + deviceIdentifier;
+            log.error(msg, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
+        }
     }
 
     private AccessTokenInfo getAccessToken(String deviceId, String user) throws DeviceManagementException {

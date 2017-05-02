@@ -84,6 +84,8 @@ public final class DeviceManagementConstants {
     public static final class OperationAttributes {
         private OperationAttributes() {throw new AssertionError(); }
         public static final String ACTIVITY = "ACTIVITY_";
+
+        public static final String ADDED = "ADDED";
     }
 
 }

@@ -18,6 +18,7 @@ package org.wso2.carbon.device.mgt.core.service;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.iot.IOTDevice;
 import org.wso2.carbon.device.mgt.common.iot.IOTDeviceType;
+import org.wso2.carbon.device.mgt.common.iot.IOTOperation;
 
 import java.util.List;
 
@@ -32,4 +33,8 @@ public interface IOTDeviceManagementCoreService {
     List<IOTDevice> getIoTDevices() throws DeviceManagementException;
 
     IOTDevice getIoTDevice(String identifier) throws DeviceManagementException;
+
+    void addOperation(IOTOperation operation) throws DeviceManagementException;
+
+    List<IOTOperation> getOperations(String deviceIdentifier) throws DeviceManagementException;
 }

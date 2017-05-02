@@ -19,10 +19,12 @@ import io.swagger.annotations.*;
 import org.wso2.carbon.apimgt.annotations.api.Scopes;
 import org.wso2.carbon.device.mgt.common.iot.IOTDevice;
 import org.wso2.carbon.device.mgt.common.iot.IOTDeviceType;
+import org.wso2.carbon.device.mgt.common.iot.IOTOperation;
 import org.wso2.carbon.device.mgt.jaxrs.beans.DeviceTypeList;
 import org.wso2.carbon.device.mgt.jaxrs.beans.ErrorResponse;
 import org.wso2.carbon.device.mgt.jaxrs.beans.iot.IOTDeviceCredentials;
 import org.wso2.carbon.device.mgt.jaxrs.beans.iot.IOTDeviceList;
+import org.wso2.carbon.device.mgt.jaxrs.beans.iot.IOTOperationsList;
 import org.wso2.carbon.device.mgt.jaxrs.util.Constants;
 
 import javax.validation.Valid;
@@ -272,4 +274,61 @@ public interface IoTDeviceManagementService {
     Response getDevice( @ApiParam(name = "type", value = "The device type name, such as ios, android, windows or fire-alarm.", required = true)
                          @PathParam("device-identifier")
                          String identifier);
+
+    @POST
+    @Path("/devices/{device-identifier}/{operation}")
+    @ApiOperation(
+            consumes = MediaType.TEXT_PLAIN,
+            produces = MediaType.APPLICATION_JSON,
+            httpMethod = "POST",
+            value = "Add operation to the device (i.e. invoke an operation)",
+            tags = "Device Type Management",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = Constants.SCOPE, value = "perm:device-types:types")
+                    })
+            }
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            code = 200,
+                            message = "OK. \n Successfully added the operation.",
+                            response = String.class
+                    ),
+                    @ApiResponse(
+                            code = 500,
+                            message = "Internal Server Error. \n Server error occurred while adding operation.",
+                            response = ErrorResponse.class)
+            }
+    )
+    Response addOperation(@PathParam("device-identifier") String deviceIdentifier, @PathParam("operation") String operationName, @ApiParam(name = "payload", value = "Operation payload.", required = true) @Valid String payload);
+
+    @GET
+    @Path("/devices/{device-identifier}/operations")
+    @ApiOperation(
+            produces = MediaType.APPLICATION_JSON,
+            httpMethod = "GET",
+            value = "Gets operations of a device (i.e. get pending operations)",
+            tags = "Device Type Management",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = Constants.SCOPE, value = "perm:device-types:types")
+                    })
+            }
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            code = 200,
+                            message = "OK. \n Successfully added the operation.",
+                            response = IOTOperationsList.class
+                    ),
+                    @ApiResponse(
+                            code = 500,
+                            message = "Internal Server Error. \n Server error occurred while adding operation.",
+                            response = ErrorResponse.class)
+            }
+    )
+    Response getOperations(@PathParam("device-identifier") String deviceIdentifier);
 }

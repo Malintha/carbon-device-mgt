@@ -15,5 +15,74 @@
  */
 package org.wso2.carbon.device.mgt.common.iot;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import org.json.JSONObject;
+
+@ApiModel(value = "IOTOperation", description = "Contains information about device type.")
 public class IOTOperation {
+
+    private int id;
+
+    private int deviceId;
+
+    @ApiModelProperty(name = "deviceIdentifier", value = "Device identifier", required = true)
+    private String deviceIdentifier;
+
+    @ApiModelProperty(name = "operationName", value = "Operation name", required = true)
+    private String operationName;
+
+    @ApiModelProperty(name = "payload", value = "Payload of the operation containing the method name and parameters.", required = true)
+    private String payload;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(int deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public String getDeviceIdentifier() {
+        return deviceIdentifier;
+    }
+
+    public void setDeviceIdentifier(String deviceIdentifier) {
+        this.deviceIdentifier = deviceIdentifier;
+    }
+
+    public String getOperationName() {
+        return operationName;
+    }
+
+    public void setOperationName(String operationName) {
+        this.operationName = operationName;
+    }
+
+    public String getPayload() {
+        return payload;
+    }
+
+    public void setPayload(String payload) {
+        this.payload = payload;
+    }
+
+    @Override
+    public String toString() {
+        JSONObject o = new JSONObject();
+        o.put("id", id);
+        o.put("deviceId", deviceId);
+        o.put("deviceIdentifier", deviceIdentifier);
+        o.put("operationName", operationName);
+        o.put("payload", payload);
+        return o.toString();
+    }
 }

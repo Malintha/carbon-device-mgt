@@ -15,5 +15,27 @@
  */
 package org.wso2.carbon.device.mgt.jaxrs.beans.iot;
 
+import org.json.JSONObject;
+import org.wso2.carbon.device.mgt.common.iot.IOTOperation;
+
+import java.util.List;
+
 public class IOTOperationsList {
+
+    private List<IOTOperation> operations;
+
+    public List<IOTOperation> getOperations() {
+        return operations;
+    }
+
+    public void setOperations(List<IOTOperation> operations) {
+        this.operations = operations;
+    }
+
+    @Override
+    public String toString() {
+        JSONObject o = new JSONObject();
+        o.put("operations", operations);
+        return o.toString();
+    }
 }

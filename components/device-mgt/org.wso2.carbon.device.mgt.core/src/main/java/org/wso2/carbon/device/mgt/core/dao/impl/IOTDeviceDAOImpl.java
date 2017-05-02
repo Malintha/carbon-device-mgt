@@ -18,6 +18,8 @@ package org.wso2.carbon.device.mgt.core.dao.impl;
 import org.json.JSONException;
 import org.wso2.carbon.device.mgt.common.iot.IOTDevice;
 import org.wso2.carbon.device.mgt.common.iot.IOTDeviceType;
+import org.wso2.carbon.device.mgt.common.iot.IOTOperation;
+import org.wso2.carbon.device.mgt.core.DeviceManagementConstants;
 import org.wso2.carbon.device.mgt.core.dao.DeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.core.dao.DeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.core.dao.IOTDeviceDAO;
@@ -250,6 +252,85 @@ public class IOTDeviceDAOImpl implements IOTDeviceDAO {
         } finally {
             DeviceManagementDAOUtil.cleanupResources(stmt, rs);
         }
+    }
+
+    @Override
+    public IOTOperation addOperation(IOTOperation operation, int tenantId) throws DeviceManagementDAOException {
+        Connection conn;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            conn = this.getConnection();
+            stmt = conn.prepareStatement(
+                    "INSERT INTO DM_IOT_OPERATION (NAME, PAYLOAD) VALUES (?, ?)");
+            stmt.setString(1, operation.getOperationName());
+            stmt.setString(2, operation.getPayload());
+            stmt.execute();
+
+            rs = stmt.getGeneratedKeys();
+            if (rs.next()) {
+                operation.setId(rs.getInt(1));
+            }
+        } catch (SQLException e) {
+            throw new DeviceManagementDAOException(
+                    "Error occurred while adding an operation to the device " + operation.getOperationName() + " of tenant " + tenantId, e);
+        } finally {
+            DeviceManagementDAOUtil.cleanupResources(stmt, null);
+        }
+        return operation;
+    }
+
+    @Override
+    public void addDeviceOperationMapping(IOTOperation operation, int tenantId) throws DeviceManagementDAOException {
+        Connection conn;
+        PreparedStatement stmt = null;
+        try {
+            conn = this.getConnection();
+            stmt = conn.prepareStatement(
+                    "INSERT INTO DM_IOT_OPERATION (DEVICE_ID, OPERATION_ID, STATUS) VALUES ((SELECT ID FROM DM_IOT_DEVICE WHERE DEVICE_ID = ? AND TENANT_ID = ?), ?, ?)");
+            stmt.setString(1, operation.getDeviceIdentifier());
+            stmt.setInt(2, tenantId);
+            stmt.setInt(3, operation.getId());
+            stmt.setString(4, DeviceManagementConstants.OperationAttributes.ADDED);
+            stmt.execute();
+        } catch (SQLException e) {
+            throw new DeviceManagementDAOException(
+                    "Error occurred while adding an operation to the device " + operation.getOperationName() + " of tenant " + tenantId, e);
+        } finally {
+            DeviceManagementDAOUtil.cleanupResources(stmt, null);
+        }
+    }
+
+    @Override
+    public List<IOTOperation> getOperations(String deviceIdentifier, int tenantId) throws DeviceManagementDAOException {
+        List<IOTOperation> operations = new ArrayList<>();
+        Connection conn;
+        PreparedStatement stmt = null;
+        try {
+            String sql = "SELECT O.ID, D.ID, O.NAME, O.PAYLOAD " +
+                    "FROM DM_IOT_DEVICE D, DM_IOT_OPERATION O " +
+                    "WHERE D.ID = O.DEVICE_ID AND D.DEVICE_ID = ? AND D.TENANT_ID = ?";
+            conn = this.getConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, deviceIdentifier);
+            stmt.setInt(2, tenantId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                IOTOperation operation = new IOTOperation();
+                operation.setId(rs.getInt("OP_ID"));
+                operation.setDeviceId(rs.getInt("DID"));
+                operation.setDeviceIdentifier(deviceIdentifier);
+                operation.setOperationName(rs.getString("OP_NAME"));
+                operation.setPayload(rs.getString("OP_PAYLOAD"));
+                operations.add(operation);
+            }
+        } catch (SQLException | JSONException e) {
+            throw new DeviceManagementDAOException(
+                    "Error occurred while fetching operations of the device " + deviceIdentifier + " of tenant " + tenantId, e);
+        } finally {
+            DeviceManagementDAOUtil.cleanupResources(stmt, null);
+        }
+        return operations;
     }
 
     private Connection getConnection() throws SQLException {

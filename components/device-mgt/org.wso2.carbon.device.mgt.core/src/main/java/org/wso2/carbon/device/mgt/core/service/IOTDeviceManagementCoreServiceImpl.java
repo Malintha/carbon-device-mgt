@@ -20,6 +20,7 @@ import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.TransactionManagementException;
 import org.wso2.carbon.device.mgt.common.iot.IOTDevice;
 import org.wso2.carbon.device.mgt.common.iot.IOTDeviceType;
+import org.wso2.carbon.device.mgt.common.iot.IOTOperation;
 import org.wso2.carbon.device.mgt.core.dao.DeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.core.dao.DeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.core.dao.IOTDeviceDAO;
@@ -117,6 +118,34 @@ public class IOTDeviceManagementCoreServiceImpl implements IOTDeviceManagementCo
         } catch (DeviceManagementDAOException | TransactionManagementException e) {
             DeviceManagementDAOFactory.rollbackTransaction();
             String msg = "Failed to get device " + identifier + " of tenant: " + getTenantId();
+            throw new DeviceManagementException(msg, e);
+        } finally {
+            DeviceManagementDAOFactory.commitTransaction();
+        }
+    }
+
+    public void addOperation(IOTOperation operation) throws DeviceManagementException {
+        try {
+            DeviceManagementDAOFactory.beginTransaction();
+            iotDeviceDAO.addOperation(operation, getTenantId());
+            iotDeviceDAO.addDeviceOperationMapping(operation, getTenantId());
+        } catch (DeviceManagementDAOException | TransactionManagementException e) {
+            DeviceManagementDAOFactory.rollbackTransaction();
+            String msg = "Failed to add operation " + operation.getOperationName() + " to device " + operation.getDeviceIdentifier() + " of tenant: " + getTenantId();
+            throw new DeviceManagementException(msg, e);
+        } finally {
+            DeviceManagementDAOFactory.commitTransaction();
+        }
+    }
+
+    public List<IOTOperation> getOperations(String deviceIdentifier) throws DeviceManagementException {
+        try {
+            DeviceManagementDAOFactory.beginTransaction();
+            List<IOTOperation> operations = iotDeviceDAO.getOperations(deviceIdentifier, getTenantId());
+            return operations;
+        } catch (DeviceManagementDAOException | TransactionManagementException e) {
+            DeviceManagementDAOFactory.rollbackTransaction();
+            String msg = "Failed to get operations of device " + deviceIdentifier + " of tenant: " + getTenantId();
             throw new DeviceManagementException(msg, e);
         } finally {
             DeviceManagementDAOFactory.commitTransaction();
