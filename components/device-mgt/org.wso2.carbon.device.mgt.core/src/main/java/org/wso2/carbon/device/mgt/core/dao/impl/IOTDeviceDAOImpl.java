@@ -38,7 +38,7 @@ public class IOTDeviceDAOImpl implements IOTDeviceDAO {
         try {
             conn = this.getConnection();
             stmt = conn.prepareStatement(
-                    "INSERT INTO DM_IOT_DEVICE_TYPE (NAME,PROVIDER_TENANT_ID,SHARED_WITH_ALL_TENANTS,CONFIG) VALUES (?,?,?,?)");
+                    "INSERT INTO DM_DEVICE_TYPE (NAME,PROVIDER_TENANT_ID,SHARED_WITH_ALL_TENANTS,CONFIG) VALUES (?,?,?,?)");
             stmt.setString(1, deviceType.getName());
             stmt.setInt(2, providerTenantId);
             stmt.setBoolean(3, isSharedWithAllTenants);
@@ -61,7 +61,7 @@ public class IOTDeviceDAOImpl implements IOTDeviceDAO {
         try {
             conn = this.getConnection();
             String sql =
-                    "SELECT NAME FROM DM_IOT_DEVICE_TYPE where PROVIDER_TENANT_ID = ? OR SHARED_WITH_ALL_TENANTS = ?";
+                    "SELECT NAME FROM DM_DEVICE_TYPE where PROVIDER_TENANT_ID = ? OR SHARED_WITH_ALL_TENANTS = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, tenantId);
             stmt.setBoolean(2, true);
@@ -86,7 +86,7 @@ public class IOTDeviceDAOImpl implements IOTDeviceDAO {
             IOTDeviceType deviceTypeInfo = null;
             conn = this.getConnection();
             String sql =
-                    "SELECT ID, CONFIG FROM DM_IOT_DEVICE_TYPE where NAME = ? AND (PROVIDER_TENANT_ID = ? OR SHARED_WITH_ALL_TENANTS = ?)";
+                    "SELECT ID, CONFIG FROM DM_DEVICE_TYPE where NAME = ? AND (PROVIDER_TENANT_ID = ? OR SHARED_WITH_ALL_TENANTS = ?)";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, deviceTypeName);
             stmt.setInt(2, tenantId);
@@ -115,7 +115,7 @@ public class IOTDeviceDAOImpl implements IOTDeviceDAO {
         try {
             conn = this.getConnection();
             stmt = conn.prepareStatement(
-                    "INSERT INTO DM_IOT_DEVICE (DEVICE_ID, NAME, DEVICE_TYPE_ID, DESCRIPTION, TENANT_ID, LAST_UPDATED) VALUES (?,?,?,?,?,?)");
+                    "INSERT INTO DM_DEVICE (DESCRIPTION, NAME, DEVICE_TYPE_ID, DEVICE_IDENTIFICATION, LAST_UPDATED_TIMESTAMP, TENANT_ID) VALUES (?,?,?,?,?,?)");
             stmt.setString(1, device.getDeviceId());
             stmt.setString(2, device.getName());
             stmt.setInt(3, device.getDeviceTypeId());
@@ -145,7 +145,7 @@ public class IOTDeviceDAOImpl implements IOTDeviceDAO {
         try {
             if (device.getProperties() != null) {
                 conn = this.getConnection();
-                stmt = conn.prepareStatement("INSERT INTO DM_IOT_DEVICE_PROPERTY (DEVICE_ID, PROP_NAME, PROP_VALUE) VALUES (?,?,?)");
+                stmt = conn.prepareStatement("INSERT INTO DM_DEVICE_INFO (DEVICE_ID, KEY_FIELD, VALUE_FIELD) VALUES (?,?,?)");
                 Map<String, String> props = device.getProperties();
                 for (String propName : props.keySet()) {
                     String propValue = props.get(propName);
@@ -173,8 +173,8 @@ public class IOTDeviceDAOImpl implements IOTDeviceDAO {
         try {
             conn = this.getConnection();
             stmt = conn.prepareStatement(
-                    "SELECT D.ID AS ID, D.DEVICE_ID AS DEVICE_ID, D.NAME AS NAME, D.DEVICE_TYPE_ID AS DEVICE_TYPE_ID, D.DESCRIPTION AS DESCRIPTION, DT.NAME AS DEVICE_TYPE_NAME " +
-                            "FROM DM_IOT_DEVICE D, DM_IOT_DEVICE_TYPE DT " +
+                    "SELECT D.ID AS ID, D.DEVICE_IDENTIFICATION AS DEVICE_ID, D.NAME AS NAME, D.DEVICE_TYPE_ID AS DEVICE_TYPE_ID, D.DESCRIPTION AS DESCRIPTION, DT.NAME AS DEVICE_TYPE_NAME " +
+                            "FROM DM_DEVICE D, DM_DEVICE_TYPE DT " +
                             "WHERE D.DEVICE_TYPE_ID = DT.ID AND D.TENANT_ID = ?");
             stmt.setInt(1, tenantId);
             ResultSet rs = stmt.executeQuery();
@@ -205,8 +205,8 @@ public class IOTDeviceDAOImpl implements IOTDeviceDAO {
         try {
             conn = this.getConnection();
             stmt = conn.prepareStatement(
-                    "SELECT D.ID AS ID, D.DEVICE_ID AS DEVICE_ID, D.NAME AS NAME, D.DEVICE_TYPE_ID AS DEVICE_TYPE_ID, D.DESCRIPTION AS DESCRIPTION, DT.NAME AS DEVICE_TYPE_NAME " +
-                            "FROM DM_IOT_DEVICE D, DM_IOT_DEVICE_TYPE DT " +
+                    "SELECT D.ID AS ID, D.DEVICE_IDENTIFICATION AS DEVICE_ID, D.NAME AS NAME, D.DEVICE_TYPE_ID AS DEVICE_TYPE_ID, D.DESCRIPTION AS DESCRIPTION, DT.NAME AS DEVICE_TYPE_NAME " +
+                            "FROM DM_DEVICE D, DM_DEVICE_TYPE DT " +
                             "WHERE D.DEVICE_TYPE_ID = DT.ID AND D.DEVICE_ID = ? AND D.TENANT_ID = ?");
             stmt.setString(1, deviceIdentifier);
             stmt.setInt(2, tenantId);
@@ -236,7 +236,7 @@ public class IOTDeviceDAOImpl implements IOTDeviceDAO {
         try {
             conn = this.getConnection();
             String sql =
-                    "SELECT PROP_NAME, PROP_VALUE FROM DM_IOT_DEVICE_PROPERTY WHERE DEVICE_ID = ?";
+                    "SELECT KEY_FIELD, VALUE_FIELD FROM DM_DEVICE_INFO WHERE DEVICE_ID = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, device.getId());
             rs = stmt.executeQuery();

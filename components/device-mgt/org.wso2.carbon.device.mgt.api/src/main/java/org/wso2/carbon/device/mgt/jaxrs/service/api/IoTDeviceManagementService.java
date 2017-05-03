@@ -270,6 +270,6 @@ public interface IoTDeviceManagementService {
             }
     )
     Response getDevice( @ApiParam(name = "type", value = "The device type name, such as ios, android, windows or fire-alarm.", required = true)
-                         @PathParam("type")
+                         @PathParam("device-identifier")
                          String identifier);
 }

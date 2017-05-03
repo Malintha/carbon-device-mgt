@@ -15,6 +15,7 @@
  */
 package org.wso2.carbon.device.mgt.jaxrs.beans.iot;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.wso2.carbon.device.mgt.common.iot.IOTDevice;
 
@@ -35,7 +36,11 @@ public class IOTDeviceList {
     @Override
     public String toString() {
         JSONObject o = new JSONObject();
-        o.put("devices", devices);
+        try {
+            o.put("devices", devices);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return o.toString();
     }
 }
