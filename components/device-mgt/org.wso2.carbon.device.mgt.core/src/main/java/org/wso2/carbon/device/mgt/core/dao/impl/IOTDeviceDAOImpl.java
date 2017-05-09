@@ -243,9 +243,9 @@ public class IOTDeviceDAOImpl implements IOTDeviceDAO {
             stmt.setInt(1, device.getId());
             rs = stmt.executeQuery();
             while (rs.next()) {
-                String propName = rs.getString("PROP_NAME");
-                String propValue = rs.getString("PROP_VALUE");
-                device.getProperties().put(propName, propValue);
+                String keyField = rs.getString("KEY_FIELD");
+                String valueField = rs.getString("VALUE_FIELD");
+                device.getProperties().put(keyField, valueField);
             }
         } catch (SQLException e) {
             throw new DeviceManagementDAOException("Error occurred while fetching properties of device: " + device.getId(), e);

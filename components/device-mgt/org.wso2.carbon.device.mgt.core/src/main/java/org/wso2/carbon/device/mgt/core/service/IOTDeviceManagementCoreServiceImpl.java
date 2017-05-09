@@ -98,6 +98,9 @@ public class IOTDeviceManagementCoreServiceImpl implements IOTDeviceManagementCo
         try {
             DeviceManagementDAOFactory.beginTransaction();
             List<IOTDevice> devices = iotDeviceDAO.getIoTDevices(getTenantId());
+            for(IOTDevice device : devices) {
+                iotDeviceDAO.populateProperties(device);
+            }
             return devices;
         } catch (DeviceManagementDAOException | TransactionManagementException e) {
             DeviceManagementDAOFactory.rollbackTransaction();
