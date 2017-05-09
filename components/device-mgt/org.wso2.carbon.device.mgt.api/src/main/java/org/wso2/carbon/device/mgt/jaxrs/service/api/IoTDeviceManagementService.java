@@ -39,7 +39,7 @@ import javax.ws.rs.core.Response;
                 extensions = {
                         @Extension(properties = {
                                 @ExtensionProperty(name = "name", value = "IoTDeviceTypeManagement"),
-                                @ExtensionProperty(name = "context", value = "/api/device-mgt/v1.0/iot-device-types"),
+                                @ExtensionProperty(name = "context", value = "/api/device-mgt/v1.0/iot"),
                         })
                 }
         ),

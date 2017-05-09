@@ -118,12 +118,12 @@ public class IOTDeviceDAOImpl implements IOTDeviceDAO {
             conn = this.getConnection();
             stmt = conn.prepareStatement(
                     "INSERT INTO DM_DEVICE (DESCRIPTION, NAME, DEVICE_TYPE_ID, DEVICE_IDENTIFICATION, LAST_UPDATED_TIMESTAMP, TENANT_ID) VALUES (?,?,?,?,?,?)");
-            stmt.setString(1, device.getDeviceId());
+            stmt.setString(4, device.getDeviceId());
             stmt.setString(2, device.getName());
             stmt.setInt(3, device.getDeviceTypeId());
-            stmt.setString(4, device.getDescription());
-            stmt.setInt(5, tenantId);
-            stmt.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
+            stmt.setString(1, device.getDescription());
+            stmt.setInt(6, tenantId);
+            stmt.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
             stmt.execute();
 
             rs = stmt.getGeneratedKeys();
@@ -209,7 +209,7 @@ public class IOTDeviceDAOImpl implements IOTDeviceDAO {
             stmt = conn.prepareStatement(
                     "SELECT D.ID AS ID, D.DEVICE_IDENTIFICATION AS DEVICE_ID, D.NAME AS NAME, D.DEVICE_TYPE_ID AS DEVICE_TYPE_ID, D.DESCRIPTION AS DESCRIPTION, DT.NAME AS DEVICE_TYPE_NAME " +
                             "FROM DM_DEVICE D, DM_DEVICE_TYPE DT " +
-                            "WHERE D.DEVICE_TYPE_ID = DT.ID AND D.DEVICE_ID = ? AND D.TENANT_ID = ?");
+                            "WHERE D.DEVICE_TYPE_ID = DT.ID AND D.DEVICE_IDENTIFICATION = ? AND D.TENANT_ID = ?");
             stmt.setString(1, deviceIdentifier);
             stmt.setInt(2, tenantId);
             ResultSet rs = stmt.executeQuery();
