@@ -165,7 +165,7 @@ public class IoTDeviceManagementServiceImpl implements IoTDeviceManagementServic
             log.error(msg, e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
         }
-        return Response.status(Response.Status.OK).entity("Device type added.").build();
+        return Response.status(Response.Status.OK).entity("Operation added.").build();
     }
 
     @GET

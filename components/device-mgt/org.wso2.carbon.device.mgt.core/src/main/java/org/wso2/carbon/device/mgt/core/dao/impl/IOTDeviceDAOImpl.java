@@ -262,9 +262,10 @@ public class IOTDeviceDAOImpl implements IOTDeviceDAO {
         try {
             conn = this.getConnection();
             stmt = conn.prepareStatement(
-                    "INSERT INTO DM_IOT_OPERATION (NAME, PAYLOAD) VALUES (?, ?)");
+                    "INSERT INTO DM_IOT_OPERATION (NAME, PAYLOAD, CREATED_TIMESTAMP) VALUES (?, ?, ?)");
             stmt.setString(1, operation.getOperationName());
             stmt.setString(2, operation.getPayload());
+            stmt.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
             stmt.execute();
 
             rs = stmt.getGeneratedKeys();
@@ -287,7 +288,7 @@ public class IOTDeviceDAOImpl implements IOTDeviceDAO {
         try {
             conn = this.getConnection();
             stmt = conn.prepareStatement(
-                    "INSERT INTO DM_IOT_OPERATION (DEVICE_ID, OPERATION_ID, STATUS) VALUES ((SELECT ID FROM DM_IOT_DEVICE WHERE DEVICE_ID = ? AND TENANT_ID = ?), ?, ?)");
+                    "INSERT INTO DM_DEVICE_OPERATION_MAP (DEVICE_ID, OPERATION_ID, STATUS) VALUES ((SELECT ID FROM DM_DEVICE WHERE DEVICE_IDENTIFICATION  = ? AND TENANT_ID = ?), ?, ?)");
             stmt.setString(1, operation.getDeviceIdentifier());
             stmt.setInt(2, tenantId);
             stmt.setInt(3, operation.getId());
@@ -307,9 +308,9 @@ public class IOTDeviceDAOImpl implements IOTDeviceDAO {
         Connection conn;
         PreparedStatement stmt = null;
         try {
-            String sql = "SELECT O.ID, D.ID, O.NAME, O.PAYLOAD " +
-                    "FROM DM_IOT_DEVICE D, DM_IOT_OPERATION O " +
-                    "WHERE D.ID = O.DEVICE_ID AND D.DEVICE_ID = ? AND D.TENANT_ID = ?";
+            String sql = "SELECT O.ID AS OID, D.ID AS DID, O.NAME, O.PAYLOAD " +
+                    "FROM DM_DEVICE D, DM_IOT_OPERATION O " +
+                    "WHERE D.ID = O.ID AND D.DEVICE_IDENTIFICATION = ? AND D.TENANT_ID = ?";
             conn = this.getConnection();
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, deviceIdentifier);
@@ -317,11 +318,11 @@ public class IOTDeviceDAOImpl implements IOTDeviceDAO {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 IOTOperation operation = new IOTOperation();
-                operation.setId(rs.getInt("OP_ID"));
+                operation.setId(rs.getInt("OID"));
                 operation.setDeviceId(rs.getInt("DID"));
                 operation.setDeviceIdentifier(deviceIdentifier);
-                operation.setOperationName(rs.getString("OP_NAME"));
-                operation.setPayload(rs.getString("OP_PAYLOAD"));
+                operation.setOperationName(rs.getString("NAME"));
+                operation.setPayload(rs.getString("PAYLOAD"));
                 operations.add(operation);
             }
         } catch (SQLException | JSONException e) {
