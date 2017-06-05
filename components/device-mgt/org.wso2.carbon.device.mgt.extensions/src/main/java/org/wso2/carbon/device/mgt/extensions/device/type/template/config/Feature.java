@@ -18,6 +18,8 @@
  */
 package org.wso2.carbon.device.mgt.extensions.device.type.template.config;
 
+import org.wso2.carbon.device.mgt.common.permission.mgt.Permission;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -53,7 +55,9 @@ import java.util.List;
 @XmlType(name = "Feature", propOrder = {
     "name",
     "description",
-    "operation", "metaData"
+    "operation",
+    "metaData",
+    "featurePermission"
 })
 public class Feature {
 
@@ -65,6 +69,8 @@ public class Feature {
     protected Operation operation;
     @XmlAttribute(name = "code")
     protected String code;
+    @XmlElement(name = "FeaturePermission")
+    protected FeaturePermission featurePermission;
     @XmlElementWrapper(name = "MetaData")
     @XmlElement(name = "Property", required = true)
     protected List<String> metaData;
@@ -139,6 +145,28 @@ public class Feature {
      */
     public void setOperation(Operation value) {
         this.operation = value;
+    }
+
+    /**
+     * Gets the value of the FeaturePermission property.
+     *
+     * @return
+     *     possible object is
+     *     {@link String }
+     *
+     */
+    public FeaturePermission getFeaturePermission() {
+        return featurePermission;
+    }
+
+    /**
+     * Sets the value of the FeaturePermission property.
+     *
+     * @param featurePermission FeaturePermission that needs to be set
+     *
+     */
+    public void setFeaturePermission(FeaturePermission featurePermission) {
+        this.featurePermission = featurePermission;
     }
 
     /**
