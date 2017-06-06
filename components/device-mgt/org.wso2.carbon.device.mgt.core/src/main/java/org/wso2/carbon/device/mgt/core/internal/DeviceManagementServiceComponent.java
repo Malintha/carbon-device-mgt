@@ -46,7 +46,7 @@ import org.wso2.carbon.device.mgt.core.notification.mgt.NotificationManagementSe
 import org.wso2.carbon.device.mgt.core.notification.mgt.dao.NotificationManagementDAOFactory;
 import org.wso2.carbon.device.mgt.core.operation.mgt.OperationManagerImpl;
 import org.wso2.carbon.device.mgt.core.operation.mgt.dao.OperationManagementDAOFactory;
-import org.wso2.carbon.device.mgt.core.permission.mgt.PermissionManagerServiceImpl;
+import org.wso2.carbon.device.mgt.extensions.permission.mgt.PermissionManagerServiceImpl;
 import org.wso2.carbon.device.mgt.core.push.notification.mgt.PushNotificationProviderRepository;
 import org.wso2.carbon.device.mgt.core.push.notification.mgt.task.PushNotificationSchedulerTask;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;

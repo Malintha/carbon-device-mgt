@@ -18,13 +18,16 @@
  */
 package org.wso2.carbon.device.mgt.extensions.device.type.template.feature;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.Feature;
 import org.wso2.carbon.device.mgt.common.FeatureManager;
 import org.wso2.carbon.device.mgt.common.permission.mgt.Permission;
+import org.wso2.carbon.device.mgt.common.permission.mgt.PermissionManagementException;
 import org.wso2.carbon.device.mgt.extensions.device.type.template.config.FeaturePermission;
 import org.wso2.carbon.device.mgt.extensions.device.type.template.config.Operation;
-import org.wso2.carbon.device.mgt.core.permission.mgt.PermissionUtils;
+import org.wso2.carbon.device.mgt.extensions.permission.mgt.PermissionUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,6 +40,7 @@ import java.util.regex.Pattern;
  * This implementation retreives the features that are configured through the deployer.
  */
 public class ConfigurationBasedFeatureManager implements FeatureManager {
+    private static final Log log = LogFactory.getLog(ConfigurationBasedFeatureManager.class);
     private List<Feature> features = new ArrayList<>();
     private static final String METHOD = "method";
     private static final String URI = "uri";
@@ -57,7 +61,11 @@ public class ConfigurationBasedFeatureManager implements FeatureManager {
 
             //Get the feature permission and add it to the registry
             FeaturePermission featurePermission = feature.getFeaturePermission();
-
+            try {
+                PermissionUtils.putPermission(featurePermission);
+            } catch (PermissionManagementException e) {
+                log.error("Error while processing the feature permission", e);
+            }
 
             List<Feature.MetadataEntry> metadataEntries = null;
             if (feature.getMetaData() != null) {

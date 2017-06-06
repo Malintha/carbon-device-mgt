@@ -22,7 +22,7 @@ import org.w3c.dom.Document;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.permission.mgt.Permission;
 import org.wso2.carbon.device.mgt.common.permission.mgt.PermissionManagementException;
-import org.wso2.carbon.device.mgt.core.internal.DeviceManagementDataHolder;
+import org.wso2.carbon.device.mgt.extensions.internal.DeviceTypeExtensionDataHolder;
 import org.wso2.carbon.registry.api.RegistryException;
 import org.wso2.carbon.registry.api.Resource;
 import org.wso2.carbon.registry.core.Registry;
@@ -45,7 +45,7 @@ public class PermissionUtils {
     public static Registry getGovernanceRegistry() throws PermissionManagementException {
         try {
             int tenantId = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId();
-            return DeviceManagementDataHolder.getInstance().getRegistryService()
+            return DeviceTypeExtensionDataHolder.getInstance().getRegistryService()
                     .getGovernanceSystemRegistry(
                             tenantId);
         } catch (RegistryException e) {

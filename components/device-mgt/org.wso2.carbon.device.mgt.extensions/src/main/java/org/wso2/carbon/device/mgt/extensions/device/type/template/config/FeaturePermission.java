@@ -19,6 +19,8 @@
 
 package org.wso2.carbon.device.mgt.extensions.device.type.template.config;
 
+import org.wso2.carbon.device.mgt.common.permission.mgt.Permission;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -30,7 +32,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 
 @XmlAccessorType(XmlAccessType.FIELD) @XmlType(name = "FeaturePermission", propOrder = { "name", "path" })
-public class FeaturePermission {
+public class FeaturePermission extends Permission {
 
     @XmlElement(name = "Name")
     private String name;

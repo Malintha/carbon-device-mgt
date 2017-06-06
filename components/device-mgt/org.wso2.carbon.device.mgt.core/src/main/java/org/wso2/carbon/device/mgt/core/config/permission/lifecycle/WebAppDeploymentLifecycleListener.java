@@ -28,7 +28,7 @@ import org.wso2.carbon.device.mgt.common.permission.mgt.Permission;
 import org.wso2.carbon.device.mgt.common.permission.mgt.PermissionManagementException;
 import org.wso2.carbon.device.mgt.common.permission.mgt.PermissionManagerService;
 import org.wso2.carbon.device.mgt.core.config.permission.AnnotationProcessor;
-import org.wso2.carbon.device.mgt.core.permission.mgt.PermissionManagerServiceImpl;
+import org.wso2.carbon.device.mgt.extensions.permission.mgt.PermissionManagerServiceImpl;
 
 import javax.servlet.ServletContext;
 import java.io.IOException;
