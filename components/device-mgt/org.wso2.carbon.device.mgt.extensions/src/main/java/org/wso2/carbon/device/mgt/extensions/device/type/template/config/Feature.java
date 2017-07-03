@@ -18,7 +18,7 @@
  */
 package org.wso2.carbon.device.mgt.extensions.device.type.template.config;
 
-import org.wso2.carbon.device.mgt.common.permission.mgt.Permission;
+import org.wso2.carbon.device.mgt.common.FeaturePermission;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

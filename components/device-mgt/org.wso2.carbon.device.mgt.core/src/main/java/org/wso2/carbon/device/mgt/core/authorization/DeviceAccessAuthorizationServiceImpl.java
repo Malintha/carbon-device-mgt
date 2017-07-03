@@ -21,10 +21,7 @@ package org.wso2.carbon.device.mgt.core.authorization;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.CarbonContext;
-import org.wso2.carbon.device.mgt.common.Device;
-import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
-import org.wso2.carbon.device.mgt.common.DeviceManagementException;
-import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
+import org.wso2.carbon.device.mgt.common.*;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationService;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAuthorizationResult;
@@ -32,8 +29,13 @@ import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroup;
 import org.wso2.carbon.device.mgt.common.group.mgt.GroupManagementException;
 import org.wso2.carbon.device.mgt.common.permission.mgt.Permission;
 import org.wso2.carbon.device.mgt.common.permission.mgt.PermissionManagementException;
+import org.wso2.carbon.device.mgt.core.dto.DeviceType;
 import org.wso2.carbon.device.mgt.core.internal.DeviceManagementDataHolder;
+import org.wso2.carbon.device.mgt.core.operation.mgt.util.OperationManagerUtils;
 import org.wso2.carbon.device.mgt.core.permission.mgt.PermissionUtils;
+import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
+import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderServiceImpl;
+import org.wso2.carbon.device.mgt.extensions.device.type.template.feature.ConfigurationBasedFeatureManager;
 import org.wso2.carbon.user.api.UserRealm;
 import org.wso2.carbon.user.api.UserStoreException;
 
@@ -104,6 +106,28 @@ public class DeviceAccessAuthorizationServiceImpl implements DeviceAccessAuthori
     @Override
     public boolean isUserAuthorized(DeviceIdentifier deviceIdentifier) throws DeviceAccessAuthorizationException {
         return isUserAuthorized(deviceIdentifier, this.getUserName(), null);
+    }
+
+    @Override
+    public boolean isUserAuthorizedForFeature(String featureCode, DeviceIdentifier deviceIdentifier) throws DeviceAccessAuthorizationException {
+        DeviceManagementProviderService dms = OperationManagerUtils.getDeviceManagementService();
+        Feature feature;
+        FeaturePermission featurePermission;
+        String userName = this.getUserName();
+        try {
+            FeatureManager fm = dms.getFeatureManager(deviceIdentifier.getType());
+            if(fm != null) {
+                feature = fm.getFeature(featureCode);
+                featurePermission = feature.getFeaturePermission();
+                String permissions[] = new String[1];
+                permissions[0] = featurePermission.getPath();
+                return isUserAuthorized(deviceIdentifier, userName, permissions);
+            }
+        } catch (DeviceManagementException e) {
+            throw new DeviceAccessAuthorizationException("Error while retrieving the feature for the code "+featureCode, e);
+        }
+
+        return false;
     }
 
     @Override

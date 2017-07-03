@@ -39,6 +39,14 @@ public interface DeviceAccessAuthorizationService {
     boolean isUserAuthorized(DeviceIdentifier deviceIdentifier) throws DeviceAccessAuthorizationException;
 
     /**
+     * This method will be used the check whether a user has the permission to invoke a given operation
+     * @param featureCode - Feature code of the operation needs to be evaluated
+     * @return Boolean authorization result
+     * @throws DeviceAccessAuthorizationException
+     */
+    boolean isUserAuthorizedForFeature(String featureCode, DeviceIdentifier deviceIdentifier) throws DeviceAccessAuthorizationException;
+
+    /**
      * This method will check whether the currently logged-in user has the access to the device identified by the given
      * DeviceIdentifier.
      *
@@ -114,7 +122,6 @@ public interface DeviceAccessAuthorizationService {
      */
     boolean isUserAuthorized(DeviceIdentifier deviceIdentifier, String username) throws
                                                                                  DeviceAccessAuthorizationException;
-
     /**
      * This method will check whether the authenticated user has the admin permissions.
      *

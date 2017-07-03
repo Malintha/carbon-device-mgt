@@ -21,10 +21,7 @@ package org.wso2.carbon.device.mgt.extensions.device.type.template.feature;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.Feature;
 import org.wso2.carbon.device.mgt.common.FeatureManager;
-import org.wso2.carbon.device.mgt.common.permission.mgt.Permission;
-import org.wso2.carbon.device.mgt.extensions.device.type.template.config.FeaturePermission;
 import org.wso2.carbon.device.mgt.extensions.device.type.template.config.Operation;
-import org.wso2.carbon.device.mgt.core.permission.mgt.PermissionUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,12 +50,8 @@ public class ConfigurationBasedFeatureManager implements FeatureManager {
             deviceFeature.setCode(feature.getCode());
             deviceFeature.setName(feature.getName());
             deviceFeature.setDescription(feature.getDescription());
+            deviceFeature.setFeaturePermission(feature.getFeaturePermission());
             Operation operation = feature.getOperation();
-
-            //Get the feature permission and add it to the registry
-            FeaturePermission featurePermission = feature.getFeaturePermission();
-
-
             List<Feature.MetadataEntry> metadataEntries = null;
             if (feature.getMetaData() != null) {
                 metadataEntries = new ArrayList<>();
@@ -143,12 +136,5 @@ public class ConfigurationBasedFeatureManager implements FeatureManager {
         while (regexMatcher.find()) {
             pathParams.add(regexMatcher.group(1));
         }
-    }
-
-    private Permission buildPermission(FeaturePermission featurePermission) {
-        Permission permission = new Permission();
-        permission.setName(featurePermission.getName());
-        permission.setPath(featurePermission.getPath());
-        return permission;
     }
 }

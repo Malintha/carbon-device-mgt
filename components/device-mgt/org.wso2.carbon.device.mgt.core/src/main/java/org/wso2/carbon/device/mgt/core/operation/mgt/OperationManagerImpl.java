@@ -30,6 +30,7 @@ import org.wso2.carbon.device.mgt.common.PaginationRequest;
 import org.wso2.carbon.device.mgt.common.PaginationResult;
 import org.wso2.carbon.device.mgt.common.TransactionManagementException;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
+import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationService;
 import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Activity;
 import org.wso2.carbon.device.mgt.common.operation.mgt.ActivityStatus;
@@ -272,11 +273,14 @@ public class OperationManagerImpl implements OperationManager {
                 authorizedDeviceList = deviceIds;
             } else {
                 boolean isAuthorized;
+                boolean isUserAutherizedForFeature;
                 authorizedDeviceList = new ArrayList<>();
                 for (DeviceIdentifier devId : deviceIds) {
-                    isAuthorized = DeviceManagementDataHolder.getInstance().getDeviceAccessAuthorizationService().
-                            isUserAuthorized(devId);
-                    if (isAuthorized) {
+                    //check isUserAuthorizedForOperation
+                    DeviceAccessAuthorizationService deviceAccessAuthorizationService = DeviceManagementDataHolder.getInstance().getDeviceAccessAuthorizationService();
+                    isAuthorized = deviceAccessAuthorizationService.isUserAuthorized(devId);
+                    isUserAutherizedForFeature = deviceAccessAuthorizationService.isUserAuthorizedForFeature(operation.getCode(), devId);
+                    if (isAuthorized && isUserAutherizedForFeature) {
                         authorizedDeviceList.add(devId);
                     } else {
                         unAuthorizedDeviceList.add(devId.getId());

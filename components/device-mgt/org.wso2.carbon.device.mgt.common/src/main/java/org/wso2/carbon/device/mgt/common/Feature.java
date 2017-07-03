@@ -42,6 +42,7 @@ public class Feature implements Serializable {
     
     @ApiModelProperty(name = "metadataEntries", value = "Properties related to features.", required = true )
     private List<MetadataEntry> metadataEntries;
+    private FeaturePermission featurePermission;
 
     @XmlElement
     public int getId() {
@@ -94,6 +95,14 @@ public class Feature implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setFeaturePermission(FeaturePermission featurePermission) {
+        this.featurePermission = featurePermission;
+    }
+
+    public FeaturePermission getFeaturePermission() {
+        return featurePermission;
     }
 
     public static class MetadataEntry implements Serializable {
